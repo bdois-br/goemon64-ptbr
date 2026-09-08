@@ -1,0 +1,24 @@
+# Data reference symbols used by the PT-BR font and dialogue-box patch.
+[[section]]
+name = ".main"
+rom = 0x00001050
+vram = 0x80000450
+size = 0x7DBD0
+symbols = [
+    { name = "D_8005BB10_5C710", vram = 0x8005BB10 },
+    { name = "D_8005BB70_5C770", vram = 0x8005BB70 },
+    { name = "D_800629A0_635A0", vram = 0x800629A0 },
+]
+
+[[section]]
+name = ".ptbr_runtime_refs"
+vram = 0x80100000
+size = 0x100000
+symbols = [
+    { name = "D_8015C5C8_15D1C8", vram = 0x8015C5C8 },
+    { name = "D_80167C48_168848", vram = 0x80167C48 },
+    { name = "D_801C775C_1C835C", vram = 0x801C775C },
+    { name = "D_801C77E0_1C83E0", vram = 0x801C77E0 },
+    { name = "D_801C7800_1C8400", vram = 0x801C7800 },
+    { name = "D_801C7808_1C8408", vram = 0x801C7808 },
+]
