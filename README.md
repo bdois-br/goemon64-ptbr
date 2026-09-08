@@ -9,7 +9,7 @@ Tradução brasileira de **Mystical Ninja Starring Goemon** para o projeto **Goe
 
 O Goemon 64 PT-BR nasceu da vontade de um fã da série de jogar *Mystical Ninja Starring Goemon* em português brasileiro.
 
-Este foi o **primeiro projeto amador do autor**, iniciado **sem experiência prévia em programação ou criação de mods**. O desenvolvimento contou com **amplo auxílio de Inteligência Artificial**, utilizada para análise, programação, investigação de erros, geração de builds e documentação. Os testes, decisões e validações dentro do jogo foram feitos manualmente pelo autor.
+Este foi o **primeiro projeto amador do autor**, iniciado **sem experiência prévia em programação ou criação de mods**. O desenvolvimento contou com **amplo auxílio de Inteligência Artificial**, utilizada para análise, programação, investigação de erros, geração de builds e documentação e tradução dos diálogos. Os testes, decisões e validações dentro do jogo foram feitos manualmente pelo autor.
 
 O trabalho foi além da tradução dos textos. Foi necessário adaptar partes do sistema de diálogos do jogo para lidar com textos maiores em português, acentuação, caixas de diálogo, retratos dos personagens, quebra automática de linhas e casos especiais de interface.
 
