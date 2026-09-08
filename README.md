@@ -40,6 +40,14 @@ Veja também: [Problemas conhecidos](KNOWN_ISSUES.md).
 - correção do cursor vermelho em menus;
 - ajustes pontuais em mensagens especiais, como o Castelo dos Brinquedos Fantasmas e a Barra de Energia.
 
+## Screenshots
+
+Algumas cenas da tradução em funcionamento:
+
+![Screenshots 1 a 4 — abertura, cena cinematográfica, diálogo e item](screenshots/screenshots-01-04.jpg)
+
+![Screenshots 5 a 8 — item, localização, menu e cena cinematográfica](screenshots/screenshots-05-08.jpg)
+
 ## Instalação
 
 1. Tenha uma instalação compatível do **Goemon64Recompiled**.
