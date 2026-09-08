@@ -1,0 +1,812 @@
+# Goemon 64 PT-BR — Retrospectiva do projeto
+
+## 1. Visão geral
+
+O **Goemon 64 PT-BR** é uma localização brasileira de *Mystical Ninja Starring Goemon*, desenvolvida para funcionar com o projeto **Goemon64Recompiled**.
+
+A proposta inicial era traduzir o jogo do inglês para o português brasileiro.
+
+Durante o desenvolvimento, porém, tornou-se necessário adaptar também partes do sistema original de diálogos.
+
+O português normalmente ocupa mais espaço que o inglês, e isso revelou diversas limitações da interface original.
+
+Entre os principais desafios estavam:
+
+- textos naturalmente mais longos;
+- caracteres acentuados inexistentes na fonte original;
+- caixas de diálogo com espaço limitado;
+- retratos ocupando parte da área de texto;
+- mensagens com diferentes geometrias internas;
+- menus e caixas de seleção;
+- códigos especiais de cor e destaque;
+- diferenças entre caixas normais e caixas que já nascem expandidas.
+
+Por esse motivo, o projeto acabou se tornando não apenas uma tradução.
+
+Ele também passou a modificar parcialmente o sistema de **renderização e layout dos diálogos**.
+
+A versão pública de referência é:
+
+**Beta 0.8.52 — FILE 05F + Barra de Energia SAFE**
+
+Durante o desenvolvimento, a **Beta 0.8.39** também se tornou uma referência importante.
+
+Ela serviu como uma das bases estáveis utilizadas nos refinamentos posteriores.
+
+---
+
+## 2. Objetivos da tradução
+
+Desde o início, uma das prioridades foi preservar o conteúdo em português da forma mais completa possível.
+
+A intenção não era simplesmente encurtar qualquer frase que ultrapassasse a caixa.
+
+O projeto tentou preservar:
+
+- significado;
+- personalidade dos personagens;
+- nomes próprios;
+- destaques coloridos;
+- estrutura das falas;
+- legibilidade.
+
+Isso levou ao desenvolvimento de soluções de layout e renderização.
+
+Em muitos casos, adaptar a interface foi considerado melhor do que reduzir excessivamente a tradução.
+
+Essa escolha tornou o projeto tecnicamente mais complexo.
+
+Por outro lado, permitiu preservar melhor o conteúdo das falas em português.
+
+---
+
+## 3. Fonte e caracteres acentuados
+
+A fonte original da versão americana não possui suporte completo ao português brasileiro.
+
+Foi necessário desenvolver um sistema de composição visual utilizando glifos já existentes no jogo.
+
+Entre os caracteres tratados estão:
+
+**á, à, â, ã, é, ê, í, ó, ô, õ, ú e ç**
+
+Também foram tratadas versões maiúsculas necessárias durante a tradução.
+
+A estratégia consiste em manter a letra-base e desenhar o sinal gráfico sobre ela.
+
+Exemplos:
+
+`ê = e + circunflexo`
+
+`ã = a + til`
+
+`ç = c + cedilha`
+
+Essa abordagem evitou substituir completamente a fonte do jogo.
+
+### Problema importante descoberto
+
+Em uma fase anterior, foi testado o uso de dados gráficos armazenados na memória pertencente ao próprio mod.
+
+O resultado foi corrupção gráfica.
+
+A rotina original utiliza os endereços dos glifos diretamente no pipeline gráfico do Nintendo 64.
+
+Os dados fornecidos pelo mod não estavam em uma região apropriada para esse uso.
+
+A solução foi abandonar as texturas privadas.
+
+A versão estável utiliza exclusivamente glifos provenientes da fonte original do jogo.
+
+Os acentos são formados por composição visual.
+
+---
+
+## 4. Refinamento dos acentos
+
+Os acentos passaram por diversas revisões.
+
+O **circunflexo** foi um dos casos mais difíceis.
+
+Foram testadas abordagens diferentes:
+
+- `^` em tamanho original;
+- dois pequenos traços separados;
+- versões menores;
+- diferentes posições verticais;
+- diferentes centralizações horizontais.
+
+A solução final voltou a utilizar **um único glifo de circunflexo**.
+
+Ele foi reduzido e reposicionado sobre a vogal.
+
+Esse processo mostrou como diferenças de apenas um ou dois pixels podem ser muito perceptíveis.
+
+Isso ocorre principalmente por causa da baixa resolução da fonte original.
+
+---
+
+## 5. Aumento das caixas de diálogo
+
+O sistema original trabalha principalmente com caixas de aproximadamente:
+
+**256 px de largura**
+
+Essa largura funciona bem para o inglês.
+
+Em português, porém, muitas frases passaram a ultrapassar a margem direita.
+
+Durante o desenvolvimento foram testadas várias larguras:
+
+- 272 px;
+- 288 px;
+- 290 px;
+- 294 px;
+- 300 px;
+- 304 px.
+
+A largura que apresentou o melhor equilíbrio foi:
+
+**288 px**
+
+Ela oferece espaço extra sem alterar excessivamente a aparência original da interface.
+
+---
+
+## 6. Expansão vertical
+
+Alguns diálogos também precisavam de mais espaço vertical.
+
+Foi implementada a possibilidade de crescimento de:
+
+**56 px → 72 px**
+
+Na terminologia usada durante o desenvolvimento:
+
+**7 rows → 9 rows**
+
+Isso permitiu acomodar aproximadamente quatro linhas visuais de texto.
+
+Essa alteração resolveu vários problemas.
+
+Porém, também revelou uma importante condição de estabilidade.
+
+---
+
+## 7. O problema crítico das caixas nativas de 9 rows
+
+Durante os testes, algumas versões começaram a fechar o jogo em determinadas cenas.
+
+A comparação entre builds foi essencial para encontrar a causa.
+
+Um exemplo importante:
+
+**Beta 0.8.8:** funcionava.
+
+**Beta 0.8.12:** apresentava crash em uma determinada situação.
+
+Foi criada então uma versão específica de diagnóstico.
+
+Nela, caixas que já nasciam originalmente com 9 rows deixavam de receber manipulação horizontal.
+
+O crash desapareceu.
+
+A investigação levou a uma regra fundamental:
+
+> Uma caixa que nasce com 7 rows pode ter sua largura modificada e depois crescer para 9 rows.
+>
+> Uma caixa que já nasce nativamente com 9 rows não deve ter sua textura horizontal reconstruída pelo mod.
+
+Essa regra se tornou uma das principais proteções de estabilidade do projeto.
+
+---
+
+## 8. Reflow automático
+
+Outro problema recorrente era o estouro de palavras pela margem direita.
+
+Para resolver isso foi desenvolvido um sistema de **word wrap automático**.
+
+O renderizador acompanha os glifos pertencentes à palavra atual.
+
+Quando a palavra não cabe mais na linha, os glifos já posicionados daquela palavra são movidos juntos para a linha seguinte.
+
+Assim, as palavras não são divididas no meio.
+
+A **Beta 0.8.25** foi um marco importante para esse sistema.
+
+Um dos diálogos usados nos testes foi:
+
+> Goemon: Do que estamos falando?!
+>
+> Deveríamos estar indo para
+>
+> Kyushu, para onde foram os
+>
+> sujeitos da Montanha Pêssego!
+
+O resultado mostrou que era possível manter frases maiores sem reduzir agressivamente a tradução.
+
+---
+
+## 9. Soft-newline debt
+
+Depois da implementação do word wrap surgiu outro problema.
+
+O script original já possui suas próprias quebras de linha.
+
+Quando o mod movia uma palavra automaticamente e logo depois encontrava um `newline` original, duas quebras podiam acabar sendo aplicadas.
+
+Em alguns casos isso criava uma quinta linha visual.
+
+Para resolver o problema foi criado o conceito de **soft-newline debt**.
+
+Quando o mod cria uma quebra automática, ele registra que existe uma quebra visual pendente.
+
+Se a próxima quebra original for redundante, ela pode ser neutralizada.
+
+Isso permite preservar o número máximo de linhas suportadas pela caixa.
+
+---
+
+## 10. Retratos dos personagens
+
+Os diálogos com retratos foram uma das áreas mais difíceis do projeto.
+
+Em determinadas cenas, um retrato ocupa parte do lado esquerdo da caixa.
+
+O texto original em inglês já foi organizado para evitar essa região.
+
+Com frases maiores em português, algumas linhas passaram a atravessar o retrato.
+
+Diversas formas de detectar automaticamente a presença de retratos foram testadas.
+
+### Estado interno da caixa
+
+Um determinado valor do contexto parecia indicar a presença de retrato.
+
+Depois foi descoberto que esse mesmo valor também aparecia em diálogos normais.
+
+Resultado:
+
+**falsos positivos.**
+
+### Análise da textura
+
+Também foi considerada uma detecção baseada no conteúdo visual da caixa.
+
+A abordagem era complexa e aumentava o risco de instabilidade.
+
+Ela foi descartada.
+
+### Posição de sprites
+
+Outra tentativa foi identificar retratos analisando a posição dos sprites.
+
+Alguns retratos reais não eram detectados de forma confiável.
+
+Essa abordagem também foi abandonada.
+
+---
+
+## 11. Solução adotada para os retratos
+
+A solução mais segura foi não tentar detectar retratos dinamicamente.
+
+Em vez disso, diálogos conhecidos passaram a ser identificados por informações relacionadas ao próprio script.
+
+O mod sabe previamente quais mensagens precisam de recuo.
+
+Foram tratados grupos relacionados a arquivos como:
+
+- **FILE 074**
+- **FILE 069**
+- **FILE 067**
+- **FILE 05F**
+
+Também foi descoberto que nem todas as cenas possuem a mesma geometria.
+
+Em alguns casos o recuo deve começar na segunda linha.
+
+Em outros, somente a terceira linha precisa ser deslocada.
+
+Exemplos:
+
+**FILE 067:** recuo a partir da segunda linha.
+
+**FILE 069:** recuo a partir da terceira linha.
+
+**FILE 05F:** recuo a partir da terceira linha.
+
+O deslocamento utilizado é de aproximadamente:
+
+**48 px**
+
+---
+
+## 12. Limitação da identificação por assinatura textual
+
+A solução baseada em assinaturas de texto se mostrou segura.
+
+Porém, ela não é perfeita.
+
+Durante os testes foram encontrados diálogos com retratos que ainda não estavam presentes nas tabelas conhecidas.
+
+Nesses casos, o recuo não era aplicado.
+
+Foi necessário acrescentar novas assinaturas conforme novos problemas apareciam.
+
+A solução funciona, mas depende do conteúdo do texto.
+
+Uma arquitetura futura poderia utilizar diretamente:
+
+**arquivo + ID ou offset real da mensagem**
+
+Exemplo:
+
+`069_0015EC`
+
+Isso tornaria a identificação independente da tradução utilizada na primeira linha.
+
+---
+
+## 13. Castelo dos Brinquedos Fantasmas
+
+Um caso especial encontrado durante o projeto foi:
+
+**[Castelo dos Brinquedos Fantasmas]**
+
+O nome ultrapassava o espaço disponível.
+
+Inicialmente foi testada uma quebra normal diretamente no texto.
+
+Essa alteração interferiu no estado interno da caixa.
+
+O resultado foi uma deformação visual.
+
+A solução final foi usar uma quebra exclusivamente visual:
+
+> [Castelo dos Brin-
+>
+> quedos Fantasmas]
+
+O hífen e o posicionamento da continuação são tratados pela renderização.
+
+O fluxo original do script permanece intacto.
+
+O cursor e a geometria lógica da caixa também não são modificados.
+
+Esse caso mostrou uma importante regra prática:
+
+> Em mensagens especiais, uma correção visual pode ser mais segura do que alterar o script original.
+
+---
+
+## 14. O diálogo das rochas e uma importante lição
+
+Um diálogo relacionado ao cachimbo, às rochas e ao Monte do Medo gerou uma longa sequência de testes.
+
+Foram realizadas experiências envolvendo:
+
+- destaque amarelo;
+- posição das quebras;
+- palavras;
+- códigos de controle;
+- reorganização do bloco do script.
+
+Depois dessas mudanças começaram a aparecer comportamentos inesperados.
+
+Entre eles:
+
+- alterações de cor;
+- linhas duplicadas;
+- mudanças estranhas no fluxo das mensagens;
+- uma tela interna semelhante a uma tela de debug ou teste do jogo.
+
+Esses experimentos ocorreram principalmente entre as builds:
+
+**0.8.40 e 0.8.46**
+
+No final, essas mudanças foram descartadas e fim do diálogo também continuao não sendo exibo in-game "no Monte do Medo".
+
+O desenvolvimento retornou à base estável da:
+
+**Beta 0.8.39**
+
+A principal lição foi:
+
+> Alterações aparentemente simples em blocos sensíveis de script podem produzir efeitos inesperados no estado do jogo.
+
+Depois disso, soluções exclusivamente visuais passaram a ser preferidas sempre que possível.
+
+---
+
+## 15. Códigos de cor e destaque
+
+O jogo utiliza códigos especiais para iniciar e finalizar destaques.
+
+Algumas palavras aparecem em amarelo para indicar informações importantes.
+
+Exemplos:
+
+- locais;
+- itens;
+- poderes;
+- objetivos;
+- termos especiais.
+
+Esses códigos estão inseridos diretamente no fluxo da mensagem.
+
+Durante o desenvolvimento ficou claro que eles não são apenas elementos cosméticos.
+
+Uma alteração incorreta pode interferir na interpretação do restante do bloco.
+
+Por isso, alterações relacionadas a cores passaram a ser tratadas como mudanças estruturais do script.
+
+---
+
+## 16. Cursor dos menus
+
+Em algumas caixas de seleção, o cursor vermelho ficava sobre as primeiras letras das opções traduzidas.
+
+Foi implementado um pequeno deslocamento horizontal.
+
+O cursor é movido aproximadamente:
+
+**16 px para a esquerda**
+
+Somente o cursor é alterado.
+
+Os textos continuam em suas posições originais.
+
+As dimensões das caixas de seleção também permanecem nativas.
+
+---
+
+## 17. Barra de Energia
+
+Um dos últimos problemas encontrados foi a mensagem:
+
+> Automaticamente, sua Barra de Energia
+>
+> aumentou em um nível!
+
+A primeira linha ultrapassava o espaço disponível.
+
+Nesse caso, uma pequena revisão editorial foi considerada melhor do que criar mais uma regra no renderizador.
+
+A mensagem passou a ser:
+
+> Automaticamente, sua Barra de
+>
+> Energia subiu um nível!
+
+Esse caso mostrou que nem todos os problemas precisam ser resolvidos por código.
+
+Em algumas situações, uma pequena revisão textual é a solução mais simples e segura.
+
+---
+
+## 18. Principais problemas observados
+
+| Problema | Causa provável | Solução adotada |
+| --- | --- | --- |
+| Texto ultrapassando a caixa | Português naturalmente mais longo | Caixa de 288 px + reflow |
+| Texto criando quinta linha | Quebra automática + newline original | Soft-newline debt |
+| Crash ao entrar em cenas | Manipulação de caixas nativas de 9 rows | Excluir caixas nativas de 9 rows |
+| Retrato cobrindo texto | Tradução ocupa mais espaço | Recuo por diálogo confirmado |
+| Recuo em diálogo sem retrato | Detecção dinâmica incorreta | Abandonar detecção dinâmica |
+| Retrato real não detectado | Heurística por sprite | Identificação pelo script |
+| Caixa deformada | Quebra nativa em mensagem especial | Quebra exclusivamente visual |
+| Cursor sobre o texto | Opções PT-BR maiores | Cursor deslocado 16 px para a esquerda |
+| Caracteres acentuados inadequados | Fonte original sem PT-BR | Composição com glifos originais |
+| Circunflexo artificial | Escala e posicionamento inadequados | Glifo único refinado |
+| Tela interna de debug/teste | Provável alteração indevida de estado após edição do script | Retorno à base estável |
+| Duplicação de linhas | Interação entre reflow e estado da caixa | Limitar manipulações e usar correções específicas |
+
+---
+
+## 19. Metodologia de testes
+
+Grande parte do progresso ocorreu por meio da comparação entre builds.
+
+O processo normalmente seguia este ciclo:
+
+**hipótese → alteração → build → teste em jogo → comparação → decisão**
+
+Esse método foi importante para encontrar problemas difíceis de localizar apenas analisando o código.
+
+Um exemplo foi a comparação:
+
+**0.8.8 funciona → 0.8.12 apresenta crash**
+
+A partir dessa diferença foram criadas builds intermediárias.
+
+O objetivo era isolar exatamente qual alteração havia causado a regressão.
+
+Foi assim que a manipulação das caixas nativas de 9 rows foi identificada como causa importante de instabilidade.
+
+O mesmo método também ajudou a descartar soluções que pareciam corretas em teoria.
+
+Quando uma mudança gerava efeitos colaterais no jogo, ela era removida ou reformulada.
+
+---
+
+## 20. Pontos fortes da arquitetura adotada
+
+Um dos principais acertos foi não tentar resolver tudo com uma única técnica.
+
+O projeto acabou dividido em várias camadas:
+
+- tradução;
+- fonte;
+- acentuação;
+- largura das caixas;
+- altura;
+- reflow;
+- retratos;
+- menus;
+- casos especiais.
+
+Essa separação reduziu o risco de uma alteração localizada quebrar todo o sistema.
+
+Outro ponto importante foi a preferência por soluções visuais.
+
+Quando possível, o projeto evita modificar diretamente blocos sensíveis do script.
+
+Essa estratégia ganhou ainda mais importância depois das regressões observadas entre as builds 0.8.40 e 0.8.46.
+
+---
+
+## 21. Compatibilidade com o Redub Mod
+
+Após a publicação foi identificado que a versão atual do **Goemon 64 PT-BR** não é totalmente compatível com:
+
+`redub_mod.nrm`
+
+O **Redub Mod** restaura vozes japonesas de algumas cutscenes que ficaram sem dublagem nas versões internacionais.
+
+Para fazer isso, ele também substitui determinados scripts por versões próprias.
+
+Entre os cenários modificados estão partes da:
+
+- abertura;
+- cena de D'Etoile;
+- sequência final.
+
+Esses scripts próprios incluem seus próprios textos em inglês.
+
+Quando o Redub Mod substitui um desses cenários, os textos da ROM que haviam sido traduzidos pelo Goemon 64 PT-BR deixam de ser utilizados.
+
+O problema não está diretamente no sistema de acentos ou nas caixas de diálogo.
+
+Os dois mods simplesmente atuam sobre partes relacionadas às mesmas cutscenes de maneiras diferentes.
+
+### Possível solução futura
+
+Seria possível criar uma camada de compatibilidade.
+
+Essa versão poderia:
+
+- preservar as vozes japonesas;
+- preservar os scripts do Redub;
+- manter timings e eventos;
+- substituir os textos ingleses incorporados por português brasileiro;
+- continuar utilizando o sistema de renderização do mod PT-BR.
+
+Essa compatibilidade não faz parte da versão 0.8.52.
+
+---
+
+## 22. O que ainda pode ser melhorado
+
+Mesmo com o projeto funcional, existem várias possibilidades de melhoria futura.
+
+### 22.1. Identificação de retratos por ID real
+
+Atualmente parte da identificação depende da assinatura do texto.
+
+Uma abordagem mais robusta seria utilizar:
+
+**arquivo + ID/offset da mensagem**
+
+Exemplo:
+
+`069_0015EC`
+
+Isso evitaria depender do conteúdo textual.
+
+---
+
+### 22.2. Simulador automático de largura
+
+Muitos problemas foram descobertos manualmente durante o jogo.
+
+Uma ferramenta externa poderia analisar:
+
+- tradução;
+- largura de cada glifo;
+- largura disponível;
+- presença de recuo;
+- quantidade de linhas.
+
+Ela poderia gerar avisos como:
+
+> FILE 069 / mensagem 0015EC  
+> Linha 3 excede o limite disponível em 18 px.
+
+Isso reduziria bastante a necessidade de testes manuais.
+
+---
+
+### 22.3. Validador de códigos especiais
+
+Também seria útil criar uma ferramenta para validar códigos de controle.
+
+Exemplos:
+
+`{em-yellow}`
+
+`{/em}`
+
+`{newline}`
+
+`{newwindow}`
+
+`{button}`
+
+`{endline}`
+
+O validador poderia identificar:
+
+- códigos sem fechamento;
+- fechamentos sem abertura;
+- quebras suspeitas;
+- alterações estruturais;
+- diferenças perigosas em relação ao script original.
+
+Isso diminuiria o risco de corrupção ou regressões.
+
+---
+
+### 22.4. Testes de regressão por screenshots
+
+Outra possibilidade seria manter um conjunto de cenas de referência.
+
+Depois de cada alteração importante, essas mesmas cenas poderiam ser testadas novamente.
+
+As screenshots ajudariam a comparar:
+
+- acentos;
+- largura das caixas;
+- retratos;
+- cursor;
+- quebras de linha;
+- cores;
+- alinhamento.
+
+Isso tornaria os testes visuais mais sistemáticos.
+
+---
+
+### 22.5. Compatibilidade com outros mods
+
+O Redub Mod mostrou que mods diferentes podem atuar sobre os mesmos scripts.
+
+Uma evolução futura poderia documentar a compatibilidade com outros mods populares do Goemon64Recompiled.
+
+Em alguns casos, poderiam ser criados patches específicos de compatibilidade.
+
+---
+
+## 23. Inteligência Artificial no desenvolvimento
+
+Este foi o primeiro projeto de programação e criação de mod realizado pelo autor.
+
+O desenvolvimento contou com amplo auxílio de **Inteligência Artificial**.
+
+A IA foi utilizada em tarefas como:
+
+- análise de código;
+- criação de implementações;
+- revisão de código;
+- investigação de crashes;
+- comparação entre builds;
+- tradução de diálogos;
+- revisão de textos;
+- geração de builds experimentais;
+- análise de resultados;
+- organização da documentação.
+
+A validação final, porém, não foi feita automaticamente.
+
+Os testes dentro do jogo foram realizados manualmente.
+
+Também foram manuais:
+
+- captura de screenshots;
+- comparação visual;
+- identificação de regressões;
+- avaliação dos resultados;
+- decisão de manter ou descartar alterações.
+
+Grande parte do desenvolvimento seguiu este processo:
+
+**hipótese → implementação → build → teste → análise → nova implementação**
+
+A Inteligência Artificial funcionou como uma ferramenta de apoio ao desenvolvimento.
+
+A validação prática permaneceu dependente dos testes realizados diretamente no jogo.
+
+---
+
+## 24. Estado final do projeto
+
+A versão pública de referência é:
+
+**Beta 0.8.52 — FILE 05F + Barra de Energia SAFE**
+
+Ela reúne as principais soluções desenvolvidas durante o projeto:
+
+- tradução PT-BR;
+- suporte visual a caracteres acentuados;
+- caixas de 288 px quando elegíveis;
+- expansão vertical de 56 para 72 px;
+- proteção para caixas nativas de 9 rows;
+- reflow automático;
+- soft-newline debt;
+- tratamento específico de retratos;
+- correção do cursor dos menus;
+- quebra visual do Castelo dos Brinquedos Fantasmas;
+- refinamentos de acentuação;
+- correção da mensagem da Barra de Energia.
+
+O projeto está **completo e jogável**.
+
+Isso não significa, porém, que todos os detalhes visuais estejam totalmente refinados.
+
+Ainda podem existir:
+
+- acentos que precisam de pequenos ajustes;
+- textos que ultrapassem caixas específicas;
+- diálogos com retratos ainda não mapeados;
+- pequenas inconsistências de espaçamento;
+- problemas de alinhamento;
+- situações raras ainda não encontradas durante os testes.
+
+A versão 0.8.52 deve ser entendida como uma tradução completa e funcional.
+
+Ela ainda pode receber refinamentos futuros.
+
+---
+
+## 25. Considerações finais
+
+O projeto começou como uma tradução de textos.
+
+Ao longo do desenvolvimento, passou a envolver também:
+
+- localização;
+- análise do sistema de diálogos;
+- manipulação de layout;
+- composição de fonte;
+- investigação de crashes;
+- testes de regressão;
+- adaptação de interface;
+- documentação técnica.
+
+Muitos dos avanços surgiram da comparação entre versões que funcionavam e versões que apresentavam problemas.
+
+Nem todas as soluções testadas foram mantidas.
+
+Algumas abordagens promissoras em teoria foram descartadas depois dos testes em jogo.
+
+Outras soluções importantes surgiram diretamente da investigação de regressões.
+
+A proteção das caixas nativas de 9 rows é um dos melhores exemplos.
+
+O resultado final também registra um processo de aprendizagem.
+
+Para futuras modificações, é importante preservar as regras de estabilidade descobertas ao longo do desenvolvimento.
+
+Também é recomendável evitar alterações diretas em scripts sensíveis quando uma solução visual equivalente puder ser utilizada.
