@@ -3,7 +3,7 @@
 Tradução brasileira de **Mystical Ninja Starring Goemon** para o projeto **Goemon64Recompiled**.
 
 **Versão atual:** Beta 0.8.52 — FILE 05F + Barra de Energia SAFE  
-**Autor:** Bruno Perez
+**Autor:** Bbdois
 
 ## Sobre o projeto
 
