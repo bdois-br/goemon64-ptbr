@@ -42,11 +42,7 @@ Veja também: [Problemas conhecidos](KNOWN_ISSUES.md).
 
 ## Screenshots
 
-Algumas cenas da tradução em funcionamento:
-
-![Screenshots 1 a 4 — abertura, cena cinematográfica, diálogo e item](screenshots/screenshots-01-04.jpg)
-
-![Screenshots 5 a 8 — item, localização, menu e cena cinematográfica](screenshots/screenshots-05-08.jpg)
+As screenshots serão adicionadas novamente em arquivos individuais para preservar a qualidade original.
 
 ## Instalação
 
