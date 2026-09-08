@@ -59,6 +59,16 @@ Veja também: [Problemas conhecidos](KNOWN_ISSUES.md).
 
 > Este projeto **não distribui a ROM nem o jogo original**. É necessário possuir legalmente uma cópia compatível de *Mystical Ninja Starring Goemon*.
 
+## Compatibilidade com outros mods
+
+### Redub Mod
+
+A versão atual do **Goemon 64 PT-BR v0.8.52** não é totalmente compatível com o `redub_mod.nrm`.
+
+O Redub Mod substitui alguns scripts das cutscenes de abertura, final e outras cenas por versões próprias para restaurar as vozes japonesas. Esses scripts também contêm seus próprios textos em inglês, fazendo com que a tradução PT-BR seja substituída nessas cenas.
+
+Está sendo estudada uma versão de compatibilidade que preserve as vozes japonesas do Redub Mod junto com os textos em português brasileiro.
+
 ## Desenvolvimento
 
 O código-fonte do mod está incluído neste repositório. A compilação utiliza o ecossistema de mods do Goemon64Recompiled/RecompModTool.
