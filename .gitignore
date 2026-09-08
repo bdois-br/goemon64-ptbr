@@ -1,0 +1,5 @@
+build/
+out_nrm/
+*.o
+*.elf
+.DS_Store
