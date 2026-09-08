@@ -41,8 +41,14 @@ Veja também: [Problemas conhecidos](KNOWN_ISSUES.md).
 - ajustes pontuais em mensagens especiais, como o Castelo dos Brinquedos Fantasmas e a Barra de Energia.
 
 ## Screenshots
-
-As screenshots serão adicionadas novamente em arquivos individuais para preservar a qualidade original.
+<img width="960" height="574" alt="Image" src="https://github.com/user-attachments/assets/cb0e313b-479b-4798-860b-fe9933e4c36e" />
+<img width="960" height="578" alt="Image" src="https://github.com/user-attachments/assets/03095028-0f37-4473-aa84-92012346093d" />
+<img width="960" height="573" alt="Image" src="https://github.com/user-attachments/assets/e9b946a4-a827-4dd6-929a-0d7970abd957" />
+<img width="960" height="573" alt="Image" src="https://github.com/user-attachments/assets/daddb671-9f93-4a53-abb8-39ce1bc6410d" />
+<img width="960" height="574" alt="Image" src="https://github.com/user-attachments/assets/0a47bbc1-250d-4e86-b9be-0bd6f4f597b8" />
+<img width="960" height="573" alt="Image" src="https://github.com/user-attachments/assets/2dfe2efb-7344-4959-b6ee-d5b2db9f3f56" />
+<img width="960" height="576" alt="Image" src="https://github.com/user-attachments/assets/8480ce4f-9c9b-4159-b2fb-d660624b696c" />
+<img width="960" height="460" alt="Image" src="https://github.com/user-attachments/assets/3f7b930e-bee1-4b10-850e-aa34932c515b" />
 
 ## Instalação
 
