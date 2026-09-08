@@ -1,0 +1,20 @@
+[manifest]
+id = "goemon64_ptbr_translation_safe_font"
+version = "0.8.52"
+display_name = "Goemon 64 - PT-BR (Beta 0.8.52 FILE 05F + Barra de Energia SAFE)"
+description = """
+Beta 0.8.52: base direta da Beta 0.8.51. Adiciona somente os dialogos confirmados do FILE 05F que ainda tinham texto passando sob o retrato, com recuo de 48 px a partir da 3a linha. Mantem o FILE 067 com recuo desde a 2a linha e o FILE 069 desde a 3a. Corrige tambem pontualmente o texto do FILE 05D da Barra de Energia para 'Automaticamente, sua Barra de' / 'Energia subiu um nivel!', regravando apenas os dois slots originais sem deslocar offsets subsequentes. Preserva protecao 9 rows safe, reflow da base, circunflexo refinado, Castelo dos Brinquedos Fantasmas, fonte, acentos e cursor vermelho.
+"""
+short_description = "FILE 05F retratos + Barra de Energia sem overflow."
+authors = [ "Bruno Perez" ]
+game_id = "mnsg"
+minimum_recomp_version = "0.2.0"
+dependencies = []
+native_libraries = []
+
+[inputs]
+elf_path = "build/mod.elf"
+mod_filename = "Goemon64_PTBR_BETA0852_FILE05F_ENERGIA_SAFE"
+func_reference_syms_file = "Goemon64RecompSyms/mnsg.syms.toml"
+data_reference_syms_files = [ "Goemon64RecompSyms/mnsg.datasyms.toml" ]
+additional_files = [ "patch.bps", "README.txt" ]
