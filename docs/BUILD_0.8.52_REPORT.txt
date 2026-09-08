@@ -1,0 +1,57 @@
+Goemon64 PT-BR Beta 0.8.52 - FILE 05F + Barra de Energia SAFE
+================================================================
+
+Base
+----
+- Derivada diretamente da Beta 0.8.51.
+
+FILE 05F - retrato
+------------------
+- Nova tabela conservadora de assinaturas confirmadas pelos prints.
+- Recuo: 48 px.
+- Inicio do recuo: line_index >= 2 (3a linha).
+- 1a e 2a linhas nao sao deslocadas.
+- Dialogos adicionados:
+  * 05F_00197C Dancin': Comporte-se!
+  * 05F_001BB4 Yae: Nao sei que poderes...
+  * 05F_001C7E Sasuke: Sim, voce tem razao!
+  * 05F_001DC6 Dancin': So precisamos unir...
+  * 05F_00211E Dancin': Dos...
+  * 05F_002254 Ebisumaru: Eu nao sei...
+  * 05F_00248A Goemon: Canalhas!
+
+FILE 05D - Barra de Energia
+----------------------------
+- Caso original:
+    Automaticamente, sua Barra de Energia
+    aumentou em um nivel!
+- Novo texto:
+    Automaticamente, sua Barra de
+    Energia subiu um nivel!
+- A regravacao ficou restrita aos dois slots binarios originais:
+  * 05D_00035A
+  * 05D_0003A4
+- Nenhum offset de mensagem posterior foi deslocado.
+- O destaque amarelo original de "um" foi removido porque os dois codigos de
+  controle extras nao cabem no segundo slot com a nova frase sem alterar a
+  estrutura binaria.
+
+BPS
+---
+- Tamanho do patch preservado: 335043 bytes.
+- Source CRC preservado: 0x8BB8B61B.
+- Target CRC atualizado: 0xB2BA8A1B.
+- Patch CRC atualizado: 0x2AD14877.
+- A regiao alterada pertence a um bloco TargetRead literal; nenhuma instrucao
+  de copia ou endereco relativo foi modificada.
+
+Preservado
+----------
+- FILE 067: recuo desde a 2a linha.
+- FILE 069: recuo desde a 3a linha.
+- FILE 074: layout confirmado.
+- Protecao nativa 9 rows / 72 px.
+- Reflow da base.
+- Circunflexo refinado da 0.8.49.
+- Castelo dos Brinquedos Fantasmas.
+- Fonte, acentos e cursor vermelho.
