@@ -1,0 +1,15 @@
+# Reference symbols used by the PT-BR font and dialogue-box patch.
+[[section]]
+name = ".main"
+rom = 0x00001050
+vram = 0x80000450
+size = 0x7DBD0
+functions = [
+    { name = "func_8000B8B0_C4B0", vram = 0x8000B8B0, size = 0x40 },
+    { name = "func_8000B8F0_C4F0", vram = 0x8000B8F0, size = 0x970 },
+    { name = "func_800148F0_154F0", vram = 0x800148F0, size = 0x138 },
+    { name = "func_8000C904_D504", vram = 0x8000C904, size = 0x75C },
+    { name = "func_8000D060_DC60", vram = 0x8000D060, size = 0x120 },
+    { name = "func_8000D180_DD80", vram = 0x8000D180, size = 0xA0 },
+    { name = "func_8003ED60_3F960", vram = 0x8003ED60, size = 0x250 },
+]
